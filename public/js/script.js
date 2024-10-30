@@ -20,4 +20,39 @@ if(navigator.geolocation){
 
 }
 
-L.map("map");
+
+const map = L.map("map").setView([0,0], 15);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "Map Source: OpenStreetMap"
+
+}).addTo(map);
+
+const markers= {};
+
+function sendLocation(latitude, longitude) {
+    socket.emit("send-location", { latitude, longitude });
+}
+
+socket.on("recieve-location", (data) => {
+    const{id, latitude, longitude} = data;
+
+    // Center the map view on the latest coordinates
+    map.setView([latitude,longitude]);
+
+    if (markers[id]) {
+        markers[id].setLatLng([latitude, longitude]);
+    } 
+    else {
+        // Add a new marker for the user
+        markers[id] = L.marker([latitude, longitude]).addTo(map);
+    }
+});
+
+socket.on("user-disconneted", (id)=>{
+    if(markers[id]){
+        map.removeLayer(markers[id]);
+        delete markers[id];
+    }
+});
+
