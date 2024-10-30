@@ -1,5 +1,6 @@
-# Phase 1-->
-## Real-Time Location Tracking using Socket.io 
+# Cab-Allocation-System
+
+## Phase 1: Real-Time Location Tracking using Socket.io 
 
 
 This Project uses OpenStreet Map for displaying the Current Location of user on the world map.
